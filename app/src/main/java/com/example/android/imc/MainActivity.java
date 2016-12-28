@@ -1,49 +1,44 @@
 package com.example.android.imc;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.RadioButton;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
-import static com.example.android.imc.R.id.altura;
-import static com.example.android.imc.R.id.calcular;
-import static com.example.android.imc.R.id.peso;
-import static com.example.android.imc.R.id.resultado;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView p;
-    EditText a;
-    TextView t;
+    EditText pesoText;
+    EditText alturaText;
+    RadioButton sexoM;
+    RadioButton sexoH;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        p = (EditText) findViewById(R.id.peso);
-        a = (EditText) findViewById(altura);
-        t = (TextView) findViewById(resultado);
+
+        pesoText = (EditText) findViewById(R.id.peso);
+        alturaText = (EditText) findViewById(R.id.altura);
+        sexoH = (RadioButton) findViewById(R.id.homemRadio);
+        sexoM = (RadioButton) findViewById(R.id.mulherRadio);
+
     }
 
-    public double calcularImc() {
-
-        double resultado;
-
-        double peso = Double.parseDouble(p.getText().toString().replaceAll(",", "."));
-        double altura = Double.parseDouble(a.getText().toString().replaceAll(",", "."));
-        if(altura != 0) {
-            resultado = peso / (altura * altura);
-        } else {
-            resultado = 0.0;
+    private String descobrirSexo() {
+        String sexo = "";
+        if(sexoH.isChecked()) {
+            sexo = "Homem";
+        } else if(sexoM.isChecked()) {
+            sexo = "Mulher";
         }
-        return resultado;
+
+        return sexo;
     }
 
     public void calcularImc(View view) {
@@ -54,10 +49,24 @@ public class MainActivity extends AppCompatActivity {
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
 
-        NumberFormat formatter = new DecimalFormat("#0.00");
+        String sexoUsr = descobrirSexo();
 
-        double resultado = calcularImc();
-
-        t.setText("Seu IMC é: " + formatter.format(resultado));
+        Bundle bundle = new Bundle();
+        bundle.putString("peso", getpesoText());
+        bundle.putString("altura", getalturaText());
+        bundle.putString("sexo", sexoUsr);
+        Intent intent = new Intent(this, relatorio.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
+
+    public String getpesoText() {
+        return this.pesoText.getText().toString();
+    }
+
+    public String getalturaText() {
+        return this.alturaText.getText().toString();
+    }
+
+
 }
