@@ -94,7 +94,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:id="@+id/homemRadio" />
+            android:id="@+id/homemRadio"
+            android:checked="true" />
 
         <RadioButton
             android:text="Mulher"

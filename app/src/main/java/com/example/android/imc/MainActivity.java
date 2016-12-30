@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         alturaText = (EditText) findViewById(R.id.altura);
         sexoH = (RadioButton) findViewById(R.id.homemRadio);
         sexoM = (RadioButton) findViewById(R.id.mulherRadio);
+
 
     }
 
@@ -51,13 +53,22 @@ public class MainActivity extends AppCompatActivity {
 
         String sexoUsr = descobrirSexo();
 
-        Bundle bundle = new Bundle();
-        bundle.putString("peso", getpesoText());
-        bundle.putString("altura", getalturaText());
-        bundle.putString("sexo", sexoUsr);
-        Intent intent = new Intent(this, relatorio.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if(getalturaText().length() == 0 || getpesoText().length() == 0) {
+
+            String mensagemErro = getString(R.string.erro_entrada_dados);
+            Toast toast = Toast.makeText(this, mensagemErro, Toast.LENGTH_SHORT);
+
+            toast.show();
+        } else {
+
+            Bundle bundle = new Bundle();
+            bundle.putString("peso", getpesoText());
+            bundle.putString("altura", getalturaText());
+            bundle.putString("sexo", sexoUsr);
+            Intent intent = new Intent(this, dashboard.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 
     public String getpesoText() {

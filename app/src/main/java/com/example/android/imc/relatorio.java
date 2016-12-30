@@ -1,13 +1,9 @@
 package com.example.android.imc;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -19,11 +15,10 @@ import static com.example.android.imc.R.id.pesoIdeal;
  * Created by saulocalixto on 27/12/16.
  */
 
-public class relatorio extends Activity {
+public class relatorio extends AppCompatActivity {
 
     TextView imcText;
     TextView pesoIdealUsuario;
-    TextView mensagemUsr;
     String pesoUsr;
     String alturaUsr;
     String sexoUsr;
@@ -33,21 +28,26 @@ public class relatorio extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.relatorio);
+        setContentView(R.layout.activity_relatorio);
 
 
         imcText = (TextView) findViewById(imc);
         pesoIdealUsuario = (TextView) findViewById(pesoIdeal);
 
-        Intent intent = getIntent();
+        if(imcText.getText().toString().equals("IMC")) {
 
-        Bundle bundle = intent.getExtras();
+            Intent intent = getIntent();
 
-        pesoUsr = bundle.getString("peso");
-        alturaUsr = bundle.getString("altura");
-        sexoUsr = bundle.getString("sexo");
+            Bundle bundle = intent.getExtras();
 
-        DefinirIMC();
+            pesoUsr = bundle.getString("peso");
+            alturaUsr = bundle.getString("altura");
+            sexoUsr = bundle.getString("sexo");
+
+            getSupportActionBar().setHomeButtonEnabled(true);
+
+            DefinirIMC();
+        }
 
     }
 
@@ -57,13 +57,23 @@ public class relatorio extends Activity {
 
         double peso = Double.parseDouble(pesoUsr.replaceAll(",", "."));
         double altura = Double.parseDouble(alturaUsr.replaceAll(",", "."));
-        if(altura != 0 || peso != 0) {
-            resultado = peso / (altura * altura);
-        } else {
-            resultado = 0.0;
-        }
+
+        resultado = peso / (altura * altura);
+
         return resultado;
     }
+    public double calcularQuantidadedeAgua() {
+
+        double resultado;
+
+        double peso = Double.parseDouble(pesoUsr.replaceAll(",", "."));
+        final double constanteAgua = 35;
+
+        resultado = peso * constanteAgua;
+
+        return resultado;
+    }
+
 
     public double calcularPesoIdeal() {
         double pesoIdeal = 0.0;
@@ -81,17 +91,17 @@ public class relatorio extends Activity {
         String mensagem = "\nInsira os dados corretamente.";
 
         if(resultado < 18.5) {
-            mensagem = "\nAbaixo do peso ideal.";
+            mensagem = "Abaixo do peso ideal.";
         } else if(resultado <24.9) {
-            mensagem = "\nSeu IMC está na média ideal, parabéns!";
+            mensagem = "Seu IMC está na média ideal, parabéns!";
         } else if (resultado < 29.9) {
-            mensagem = "\nLevemente acima do peso";
+            mensagem = "Levemente acima do peso";
         } else if(resultado < 34.9) {
-            mensagem = "\nObesidade grau 1";
+            mensagem = "Obesidade grau 1";
         } else if(resultado < 39.9) {
-            mensagem = "\nObesidade grau 2, severa!";
+            mensagem = "Obesidade grau 2, severa!";
         } else if(resultado > 40) {
-            mensagem = "\nObesidade grau 3, mórbida!";
+            mensagem = "Obesidade grau 3, mórbida!";
         }
 
         return mensagem;
@@ -99,26 +109,30 @@ public class relatorio extends Activity {
 
     public void DefinirIMC() {
 
-        NumberFormat formatter = new DecimalFormat("#0.00");
+        if(imcText.getText().toString().equals("IMC")) {
 
-        double resultado = calcularImc();
-        String mensagem = resultadoImc(resultado);
+            NumberFormat formatter = new DecimalFormat("#0.00");
 
-        imcText.setText("Seu IMC é: " + formatter.format(resultado) +
-                "\nVocê está: " + mensagem);
-        if(Double.parseDouble(pesoUsr) - calcularPesoIdeal() > 0) {
-            pesoIdealUsuario.setText("Seu peso ideal é: " + formatter.format(calcularPesoIdeal())
-                    + " Kg" + "\nVocê deve perder: "
-                    + formatter.format(Double.parseDouble(pesoUsr) - calcularPesoIdeal()) + " Kg");
-        } else {
-            pesoIdealUsuario.setText("Seu peso ideal é: " + formatter.format(calcularPesoIdeal())
-                    + " Kg" + "\nVocê deve ganhar: "
-                    + formatter.format(calcularPesoIdeal() - Double.parseDouble(pesoUsr)) + " Kg");
+            double quantAgua = calcularQuantidadedeAgua();
+
+            double resultado = calcularImc();
+            String mensagem = resultadoImc(resultado);
+
+            imcText.setText("Seu IMC é: " + formatter.format(resultado) +
+                    "\nSignificado: " + mensagem);
+            if (Double.parseDouble(pesoUsr) - calcularPesoIdeal() > 0) {
+                pesoIdealUsuario.setText("Seu peso ideal é: " + formatter.format(calcularPesoIdeal())
+                        + " Kg" + "\nVocê deve perder: "
+                        + formatter.format(Double.parseDouble(pesoUsr) - calcularPesoIdeal()) + " Kg "  +
+                        "\nQuantidade de Água ideal para ser ingerida por dia: "
+                        + formatter.format(quantAgua/1000)  + " L.");
+            } else {
+                pesoIdealUsuario.setText("Seu peso ideal é: " + formatter.format(calcularPesoIdeal())
+                        + " Kg" + "\nVocê deve ganhar: "
+                        + formatter.format(calcularPesoIdeal() - Double.parseDouble(pesoUsr)) + " Kg" +
+                "\nQuantidade de Água ideal para ser ingerida por dia: "
+                        + formatter.format(quantAgua/1000)  + " L.");
+            }
         }
-    }
-
-    public void voltar (View v) {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 }

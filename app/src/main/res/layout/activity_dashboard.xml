@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8bc34a">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1"
+        android:layout_margin="52dp">
+
+        <TableRow>
+            <TextView
+                android:id="@+id/saude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:clickable="true"
+                android:layout_marginTop="64dp"
+                android:drawableTop="@drawable/saude"
+                android:drawableTint="#d50000"
+                android:onClick="gerarRelatorio"
+                android:text="Saúde"
+                android:textColor="#d50000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/exercicios"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:clickable="true"
+                android:drawableTop="@drawable/exercicios"
+                android:layout_marginTop="64dp"
+                android:drawableTint="#8e24aa"
+                android:onClick="gerarRelatorio"
+                android:text="Exercício"
+                android:textColor="#8e24aa"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/dieta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:clickable="true"
+                android:layout_marginTop="64dp"
+                android:drawableTop="@drawable/dieta"
+                android:drawableTint="#009688"
+                android:onClick="mostrarDietas"
+                android:text="Dieta"
+                android:textColor="#009688"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/agua"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginTop="64dp"
+                android:textAlignment="center"
+                android:clickable="true"
+                android:drawableTop="@drawable/agua"
+                android:drawableTint="#2196f3"
+                android:onClick="gerarRelatorio"
+                android:text="Beba Água"
+                android:textColor="#2196f3"
+                android:textStyle="bold" />
+        </TableRow>
+
+
+
+    </TableLayout>
+
+</ScrollView>

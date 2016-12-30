@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Health-me</string>
+    <string name="erro_entrada_dados">Preencha os campos corretamente!</string>
+    <string name="peso">Peso</string>
+    <string name="altura">Altura</string>
+    <string name="sexo">Sexo</string>
 </resources>
