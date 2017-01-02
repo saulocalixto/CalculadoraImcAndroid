@@ -1,14 +1,23 @@
 package com.example.android.imc;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
+import static com.example.android.imc.R.id.agua;
 import static com.example.android.imc.R.id.imc;
+import static com.example.android.imc.R.id.perfil;
 import static com.example.android.imc.R.id.pesoIdeal;
 
 /**
@@ -19,10 +28,13 @@ public class relatorio extends AppCompatActivity {
 
     TextView imcText;
     TextView pesoIdealUsuario;
+    TextView perfilUsuario;
+    TextView aguaUsr;
     String pesoUsr;
     String alturaUsr;
     String sexoUsr;
-
+    String nomeUsr;
+    String idadeUsr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +45,9 @@ public class relatorio extends AppCompatActivity {
 
         imcText = (TextView) findViewById(imc);
         pesoIdealUsuario = (TextView) findViewById(pesoIdeal);
+        perfilUsuario = (TextView) findViewById(perfil);
+        aguaUsr = (TextView) findViewById(agua);
+
 
         if(imcText.getText().toString().equals("IMC")) {
 
@@ -43,8 +58,8 @@ public class relatorio extends AppCompatActivity {
             pesoUsr = bundle.getString("peso");
             alturaUsr = bundle.getString("altura");
             sexoUsr = bundle.getString("sexo");
-
-            getSupportActionBar().setHomeButtonEnabled(true);
+            nomeUsr = bundle.getString("nome");
+            idadeUsr = bundle.getString("idade");
 
             DefinirIMC();
         }
@@ -73,7 +88,6 @@ public class relatorio extends AppCompatActivity {
 
         return resultado;
     }
-
 
     public double calcularPesoIdeal() {
         double pesoIdeal = 0.0;
@@ -107,32 +121,72 @@ public class relatorio extends AppCompatActivity {
         return mensagem;
     }
 
+    public String definirPerfil() {
+        String perfil;
+
+        perfil = "Nome: " + nomeUsr.toString();
+        perfil += "\nIdade: " + idadeUsr.toString();
+        perfil += "\nSexo: " + sexoUsr;
+        perfil += "\nAltura: " + alturaUsr.toString();
+        perfil += "\nPeso: " + pesoUsr.toString();
+
+        return perfil;
+    }
+
+    public String definirIMC() {
+        String IMC;
+
+        NumberFormat formatter = new DecimalFormat("#0.00");
+
+        IMC = "IMC: " + formatter.format(calcularImc());
+        IMC += "\n" + resultadoImc(calcularImc());
+
+        return IMC;
+    }
+
+    public String definirPesoIdeal() {
+
+        NumberFormat formatter = new DecimalFormat("#0.00");
+
+        String peso;
+
+        peso = "Peso ideal: " + formatter.format(calcularPesoIdeal()) + " KG";
+
+        if(Double.parseDouble(pesoUsr) - calcularPesoIdeal() > 0) {
+            peso += "\nVocê deve perder " + formatter.format(Double.parseDouble(pesoUsr) -
+                    calcularPesoIdeal()) + " KG";
+        } else {
+            peso += "\nVocê deve ganhar " + formatter.format(calcularPesoIdeal() -
+                    Double.parseDouble(pesoUsr)) + " KG";
+        }
+
+        return peso;
+
+    }
+
+    public String definirAgua() {
+
+        NumberFormat formatter = new DecimalFormat("#0.00");
+
+        String agua;
+
+        agua = "Levando em conta seu peso e sua altura, você deve ingerir:";
+        agua += "\n" + formatter.format(calcularQuantidadedeAgua() / 1000).toString()
+                + " Litros de Água diária.";
+
+        return agua;
+
+    }
+
+
     public void DefinirIMC() {
 
         if(imcText.getText().toString().equals("IMC")) {
 
-            NumberFormat formatter = new DecimalFormat("#0.00");
-
-            double quantAgua = calcularQuantidadedeAgua();
-
-            double resultado = calcularImc();
-            String mensagem = resultadoImc(resultado);
-
-            imcText.setText("Seu IMC é: " + formatter.format(resultado) +
-                    "\nSignificado: " + mensagem);
-            if (Double.parseDouble(pesoUsr) - calcularPesoIdeal() > 0) {
-                pesoIdealUsuario.setText("Seu peso ideal é: " + formatter.format(calcularPesoIdeal())
-                        + " Kg" + "\nVocê deve perder: "
-                        + formatter.format(Double.parseDouble(pesoUsr) - calcularPesoIdeal()) + " Kg "  +
-                        "\nQuantidade de Água ideal para ser ingerida por dia: "
-                        + formatter.format(quantAgua/1000)  + " L.");
-            } else {
-                pesoIdealUsuario.setText("Seu peso ideal é: " + formatter.format(calcularPesoIdeal())
-                        + " Kg" + "\nVocê deve ganhar: "
-                        + formatter.format(calcularPesoIdeal() - Double.parseDouble(pesoUsr)) + " Kg" +
-                "\nQuantidade de Água ideal para ser ingerida por dia: "
-                        + formatter.format(quantAgua/1000)  + " L.");
-            }
+            perfilUsuario.setText(definirPerfil());
+            imcText.setText(definirIMC());
+            pesoIdealUsuario.setText(definirPesoIdeal());
+            aguaUsr.setText(definirAgua());
         }
     }
 }

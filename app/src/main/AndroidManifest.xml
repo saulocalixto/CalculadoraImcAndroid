@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".relatorio" android:parentActivityName=".dashboard"
+        <activity android:name=".relatorio"
             android:label="Relatório" android:theme="@style/relatorio">
             <intent-filter>
                 <action android:name="android.intent.action.relatorio"></action>
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".dieta" android:parentActivityName=".dashboard"
+        <activity android:name=".dieta"
             android:label="Dietas" android:theme="@style/dieta">
             <intent-filter>
                 <action android:name="android.intent.action.dieta"></action>

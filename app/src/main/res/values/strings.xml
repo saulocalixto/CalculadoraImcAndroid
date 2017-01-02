@@ -4,4 +4,8 @@
     <string name="peso">Peso</string>
     <string name="altura">Altura</string>
     <string name="sexo">Sexo</string>
+    <string name="dieta">Dieta</string>
+    <string name="exercicios">Exercícios</string>
+    <string name="saude">Saúde</string>
+    <string name="beba_agua">Beba Água</string>
 </resources>

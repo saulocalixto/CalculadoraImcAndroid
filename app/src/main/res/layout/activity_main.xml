@@ -1,92 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteY="0dp"
+    tools:layout_editor_absoluteX="8dp">
+
+<LinearLayout
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    tools:context="com.example.android.imc.MainActivity">
+    android:orientation="vertical"
+    android:layout_margin="16dp" >
 
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:ems="10"
-        android:id="@+id/peso"
-        android:hint="Peso Kg"
-        android:layout_margin="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="40dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintBottom_toBottomOf="@+id/altura"
-        app:layout_constraintVertical_bias="0.029999971" />
-
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:ems="10"
-        android:id="@+id/altura"
-        android:layout_margin="16dp"
-        android:hint="Altura m"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintVertical_bias="0.23000002"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1" />
-
-    <Button
-        android:text="Calcular IMC"
+    <TextView
+        android:text="Cadastro de Perfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/calcular"
-        android:onClick="calcularImc"
-        android:textColor="@android:color/white"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="43dp"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/radioGroup"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:id="@+id/nome"
+        android:hint="Nome"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/idadeUsr"
+        android:hint="Idade"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:id="@+id/peso"
+        android:hint="Peso Kg"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:id="@+id/altura"
+        android:hint="Altura m"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"/>
+
     <RadioGroup
-        android:layout_width="0dp"
+        android:layout_width="320dp"
         android:layout_height="45dp"
-        android:checkedButton="@+id/Homem"
+        android:checkedButton="@+id/homemRadio"
         android:orientation="horizontal"
         android:id="@+id/radioGroup"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="120dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/altura"
-        app:layout_constraintVertical_bias="0.26"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1">
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
 
         <RadioButton
             android:text="Homem"
@@ -107,4 +93,17 @@
 
     </RadioGroup>
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:text="Entrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/calcular"
+        android:onClick="calcularImc"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"/>
+
+
+</LinearLayout>
+    </ScrollView>
