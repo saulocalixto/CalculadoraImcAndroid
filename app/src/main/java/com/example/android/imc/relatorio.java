@@ -1,15 +1,8 @@
 package com.example.android.imc;
 
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
-import android.view.View;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -26,15 +19,15 @@ import static com.example.android.imc.R.id.pesoIdeal;
 
 public class relatorio extends AppCompatActivity {
 
-    TextView imcText;
-    TextView pesoIdealUsuario;
-    TextView perfilUsuario;
-    TextView aguaUsr;
-    String pesoUsr;
-    String alturaUsr;
-    String sexoUsr;
-    String nomeUsr;
-    String idadeUsr;
+    private TextView imcText;
+    private TextView pesoIdealUsuario;
+    private TextView perfilUsuario;
+    private TextView qtdDiariaDeAgua;
+    private String pesoDoUsuario;
+    private String alturaDoUsuario;
+    private String sexoDoUsuario;
+    private String nomeDoUsuario;
+    private String idadeDoUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,59 +35,76 @@ public class relatorio extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_relatorio);
 
+        mapeiaCamposDaView();
 
-        imcText = (TextView) findViewById(imc);
-        pesoIdealUsuario = (TextView) findViewById(pesoIdeal);
-        perfilUsuario = (TextView) findViewById(perfil);
-        aguaUsr = (TextView) findViewById(agua);
-
-
-        if(imcText.getText().toString().equals("IMC")) {
-
-            Intent intent = getIntent();
-
-            Bundle bundle = intent.getExtras();
-
-            pesoUsr = bundle.getString("peso");
-            alturaUsr = bundle.getString("altura");
-            sexoUsr = bundle.getString("sexo");
-            nomeUsr = bundle.getString("nome");
-            idadeUsr = bundle.getString("idade");
-
-            DefinirIMC();
+        if(viewJaFoiCarregada()) {
+            setaValores();
+            PreecherRelatorio();
         }
 
     }
 
+    private void setaValores() {
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
+        pesoDoUsuario = bundle.getString("peso");
+        alturaDoUsuario = bundle.getString("altura");
+        sexoDoUsuario = bundle.getString("sexo");
+        nomeDoUsuario = bundle.getString("nome");
+        idadeDoUsuario = bundle.getString("idade");
+    }
+
+    private boolean viewJaFoiCarregada() {
+        return imcText.getText().toString().equals("IMC");
+    }
+
+    private void mapeiaCamposDaView() {
+        imcText = (TextView) findViewById(imc);
+        pesoIdealUsuario = (TextView) findViewById(pesoIdeal);
+        perfilUsuario = (TextView) findViewById(perfil);
+        qtdDiariaDeAgua = (TextView) findViewById(agua);
+    }
+
     public double calcularImc() {
 
-        double resultado;
+        double imc;
 
-        double peso = Double.parseDouble(pesoUsr.replaceAll(",", "."));
-        double altura = Double.parseDouble(alturaUsr.replaceAll(",", "."));
+        double peso = valorSemCaracteresNaoNumericos(pesoDoUsuario);
+        double altura = getAlturaDouble();
+        imc = peso / (altura * altura);
 
-        resultado = peso / (altura * altura);
-
-        return resultado;
+        return imc;
     }
+
+    private double getAlturaDouble() {
+        double altura = valorSemCaracteresNaoNumericos(alturaDoUsuario);
+        altura = altura > 100 ? altura / 100 : altura;
+        return altura;
+    }
+
+    private double valorSemCaracteresNaoNumericos(String valor) {
+        return Double.parseDouble(valor.replaceAll(",", "."));
+    }
+
     public double calcularQuantidadedeAgua() {
 
-        double resultado;
+        double quantidadeIdealDeAgua;
 
-        double peso = Double.parseDouble(pesoUsr.replaceAll(",", "."));
-        final double constanteAgua = 35;
+        double peso = valorSemCaracteresNaoNumericos(pesoDoUsuario);
+        final double CONSTANTEAGUA = 35;
 
-        resultado = peso * constanteAgua;
+        quantidadeIdealDeAgua = peso * CONSTANTEAGUA;
 
-        return resultado;
+        return quantidadeIdealDeAgua;
     }
 
     public double calcularPesoIdeal() {
         double pesoIdeal = 0.0;
-        if(sexoUsr.equals("Homem")) {
-            pesoIdeal = (72.7 * Double.parseDouble(alturaUsr)) - 58;
-        } else if(sexoUsr.equals("Mulher")) {
-            pesoIdeal = (62.1 * Double.parseDouble(alturaUsr)) - 44.7;
+        if(sexoDoUsuario.equals("Homem")) {
+            pesoIdeal = (72.7 * getAlturaDouble()) - 58;
+        } else if(sexoDoUsuario.equals("Mulher")) {
+            pesoIdeal = (62.1 * getAlturaDouble()) - 44.7;
         }
 
         return pesoIdeal;
@@ -102,11 +112,16 @@ public class relatorio extends AppCompatActivity {
 
     public String resultadoImc(double resultado) {
 
+        return defineMensagemDeResultadoDoImc(resultado);
+    }
+
+    private String defineMensagemDeResultadoDoImc(double resultado) {
+
         String mensagem = "\nInsira os dados corretamente.";
 
         if(resultado < 18.5) {
             mensagem = "Abaixo do peso ideal.";
-        } else if(resultado <24.9) {
+        } else if(resultado < 24.9) {
             mensagem = "Seu IMC está na média ideal, parabéns!";
         } else if (resultado < 29.9) {
             mensagem = "Levemente acima do peso";
@@ -117,18 +132,18 @@ public class relatorio extends AppCompatActivity {
         } else if(resultado > 40) {
             mensagem = "Obesidade grau 3, mórbida!";
         }
-
+        
         return mensagem;
     }
 
     public String definirPerfil() {
         String perfil;
 
-        perfil = "Nome: " + nomeUsr.toString();
-        perfil += "\nIdade: " + idadeUsr.toString();
-        perfil += "\nSexo: " + sexoUsr;
-        perfil += "\nAltura: " + alturaUsr.toString();
-        perfil += "\nPeso: " + pesoUsr.toString();
+        perfil = "Nome: " + nomeDoUsuario.toString();
+        perfil += "\nIdade: " + idadeDoUsuario.toString();
+        perfil += "\nSexo: " + sexoDoUsuario;
+        perfil += "\nAltura: " + alturaDoUsuario.toString();
+        perfil += "\nPeso: " + pesoDoUsuario.toString();
 
         return perfil;
     }
@@ -152,12 +167,12 @@ public class relatorio extends AppCompatActivity {
 
         peso = "Peso ideal: " + formatter.format(calcularPesoIdeal()) + " KG";
 
-        if(Double.parseDouble(pesoUsr) - calcularPesoIdeal() > 0) {
-            peso += "\nVocê deve perder " + formatter.format(Double.parseDouble(pesoUsr) -
+        if(Double.parseDouble(pesoDoUsuario) - calcularPesoIdeal() > 0) {
+            peso += "\nVocê deve perder " + formatter.format(Double.parseDouble(pesoDoUsuario) -
                     calcularPesoIdeal()) + " KG";
         } else {
             peso += "\nVocê deve ganhar " + formatter.format(calcularPesoIdeal() -
-                    Double.parseDouble(pesoUsr)) + " KG";
+                    Double.parseDouble(pesoDoUsuario)) + " KG";
         }
 
         return peso;
@@ -178,15 +193,11 @@ public class relatorio extends AppCompatActivity {
 
     }
 
+    public void PreecherRelatorio() {
 
-    public void DefinirIMC() {
-
-        if(imcText.getText().toString().equals("IMC")) {
-
-            perfilUsuario.setText(definirPerfil());
-            imcText.setText(definirIMC());
-            pesoIdealUsuario.setText(definirPesoIdeal());
-            aguaUsr.setText(definirAgua());
-        }
+        perfilUsuario.setText(definirPerfil());
+        imcText.setText(definirIMC());
+        pesoIdealUsuario.setText(definirPesoIdeal());
+        qtdDiariaDeAgua.setText(definirAgua());
     }
 }

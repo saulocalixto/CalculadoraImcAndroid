@@ -38,7 +38,6 @@ public class dashboard extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.dieta:
-
                 mensagem(view);
                 intent = new Intent(this, dieta.class);
                 startActivity(intent);
