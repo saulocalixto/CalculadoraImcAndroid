@@ -1,10 +1,12 @@
 package com.example.android.imc;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
-
+import android.view.MenuItem;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -18,6 +20,9 @@ import static com.example.android.imc.R.id.pesoIdeal;
  */
 
 public class relatorio extends AppCompatActivity {
+
+    final double QUANTIDADE_DE_AGUA_POR_KG = 35;
+    final double LITRO = 1000;
 
     private TextView imcText;
     private TextView pesoIdealUsuario;
@@ -35,13 +40,44 @@ public class relatorio extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_relatorio);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mapeiaCamposDaView();
 
         if(viewJaFoiCarregada()) {
             setaValores();
             PreecherRelatorio();
         }
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, dashboard.class);
+        i.putExtras(getIntent());
+        startActivity(i);
+        finish();
+    }
+
+    private void mapeiaCamposDaView() {
+        imcText = (TextView) findViewById(imc);
+        pesoIdealUsuario = (TextView) findViewById(pesoIdeal);
+        perfilUsuario = (TextView) findViewById(perfil);
+        qtdDiariaDeAgua = (TextView) findViewById(agua);
+    }
+
+    private boolean viewJaFoiCarregada() {
+        return imcText.getText().toString().equals("IMC");
     }
 
     private void setaValores() {
@@ -55,64 +91,33 @@ public class relatorio extends AppCompatActivity {
         idadeDoUsuario = bundle.getString("idade");
     }
 
-    private boolean viewJaFoiCarregada() {
-        return imcText.getText().toString().equals("IMC");
+    private void PreecherRelatorio() {
+        perfilUsuario.setText(definirPerfil());
+        imcText.setText(definirIMC());
+        pesoIdealUsuario.setText(definirPesoIdeal());
+        qtdDiariaDeAgua.setText(definirAgua());
     }
 
-    private void mapeiaCamposDaView() {
-        imcText = (TextView) findViewById(imc);
-        pesoIdealUsuario = (TextView) findViewById(pesoIdeal);
-        perfilUsuario = (TextView) findViewById(perfil);
-        qtdDiariaDeAgua = (TextView) findViewById(agua);
+    private String definirIMC() {
+        String IMC;
+
+        NumberFormat formatter = new DecimalFormat("#0.00");
+
+        IMC = "IMC: " + formatter.format(calcularImc());
+        IMC += "\n" + defineMensagemDeResultadoDoImc(calcularImc());
+
+        return IMC;
     }
 
-    public double calcularImc() {
+    private double calcularImc() {
 
         double imc;
 
-        double peso = valorSemCaracteresNaoNumericos(pesoDoUsuario);
+        double peso = transformeStringEmDouble(pesoDoUsuario);
         double altura = getAlturaDouble();
         imc = peso / (altura * altura);
 
         return imc;
-    }
-
-    private double getAlturaDouble() {
-        double altura = valorSemCaracteresNaoNumericos(alturaDoUsuario);
-        altura = altura > 100 ? altura / 100 : altura;
-        return altura;
-    }
-
-    private double valorSemCaracteresNaoNumericos(String valor) {
-        return Double.parseDouble(valor.replaceAll(",", "."));
-    }
-
-    public double calcularQuantidadedeAgua() {
-
-        double quantidadeIdealDeAgua;
-
-        double peso = valorSemCaracteresNaoNumericos(pesoDoUsuario);
-        final double CONSTANTEAGUA = 35;
-
-        quantidadeIdealDeAgua = peso * CONSTANTEAGUA;
-
-        return quantidadeIdealDeAgua;
-    }
-
-    public double calcularPesoIdeal() {
-        double pesoIdeal = 0.0;
-        if(sexoDoUsuario.equals("Homem")) {
-            pesoIdeal = (72.7 * getAlturaDouble()) - 58;
-        } else if(sexoDoUsuario.equals("Mulher")) {
-            pesoIdeal = (62.1 * getAlturaDouble()) - 44.7;
-        }
-
-        return pesoIdeal;
-    }
-
-    public String resultadoImc(double resultado) {
-
-        return defineMensagemDeResultadoDoImc(resultado);
     }
 
     private String defineMensagemDeResultadoDoImc(double resultado) {
@@ -132,8 +137,46 @@ public class relatorio extends AppCompatActivity {
         } else if(resultado > 40) {
             mensagem = "Obesidade grau 3, mórbida!";
         }
-        
+
         return mensagem;
+    }
+
+    private double transformeStringEmDouble(String valor) {
+        return valor == null ? 0.0 : Double.parseDouble(valor.replaceAll(",", "."));
+    }
+
+    /**
+     * Transforma a altura passada pelo usuário em double.
+     * Caso o usuário tenha digitado a altura em centímeros, não em metros é feita a conversão
+     * de centímeros para metros.
+     * @return A altura do usuário convertida para metros e double.
+     */
+    private double getAlturaDouble() {
+        double altura = transformeStringEmDouble(alturaDoUsuario);
+        altura = altura > 100 ? altura / 100 : altura;
+        return altura;
+    }
+
+    public double calcularQuantidadedeAgua() {
+
+        double quantidadeIdealDeAgua;
+
+        double peso = transformeStringEmDouble(pesoDoUsuario);
+
+        quantidadeIdealDeAgua = peso * QUANTIDADE_DE_AGUA_POR_KG;
+
+        return quantidadeIdealDeAgua;
+    }
+
+    public double calcularPesoIdeal() {
+        double pesoIdeal = 0.0;
+        if(sexoDoUsuario.equals("Homem")) {
+            pesoIdeal = (72.7 * getAlturaDouble()) - 58;
+        } else if(sexoDoUsuario.equals("Mulher")) {
+            pesoIdeal = (62.1 * getAlturaDouble()) - 44.7;
+        }
+
+        return pesoIdeal;
     }
 
     public String definirPerfil() {
@@ -148,17 +191,6 @@ public class relatorio extends AppCompatActivity {
         return perfil;
     }
 
-    public String definirIMC() {
-        String IMC;
-
-        NumberFormat formatter = new DecimalFormat("#0.00");
-
-        IMC = "IMC: " + formatter.format(calcularImc());
-        IMC += "\n" + resultadoImc(calcularImc());
-
-        return IMC;
-    }
-
     public String definirPesoIdeal() {
 
         NumberFormat formatter = new DecimalFormat("#0.00");
@@ -167,7 +199,9 @@ public class relatorio extends AppCompatActivity {
 
         peso = "Peso ideal: " + formatter.format(calcularPesoIdeal()) + " KG";
 
-        if(Double.parseDouble(pesoDoUsuario) - calcularPesoIdeal() > 0) {
+        boolean pesoDoUsuarioEhMaiorQuePesoIdeal = Double.parseDouble(pesoDoUsuario) - calcularPesoIdeal() > 0;
+
+        if(pesoDoUsuarioEhMaiorQuePesoIdeal) {
             peso += "\nVocê deve perder " + formatter.format(Double.parseDouble(pesoDoUsuario) -
                     calcularPesoIdeal()) + " KG";
         } else {
@@ -186,18 +220,9 @@ public class relatorio extends AppCompatActivity {
         String agua;
 
         agua = "Levando em conta seu peso e sua altura, você deve ingerir:";
-        agua += "\n" + formatter.format(calcularQuantidadedeAgua() / 1000).toString()
+        agua += "\n" + formatter.format(calcularQuantidadedeAgua() / LITRO).toString()
                 + " Litros de Água diária.";
 
         return agua;
-
-    }
-
-    public void PreecherRelatorio() {
-
-        perfilUsuario.setText(definirPerfil());
-        imcText.setText(definirIMC());
-        pesoIdealUsuario.setText(definirPesoIdeal());
-        qtdDiariaDeAgua.setText(definirAgua());
     }
 }

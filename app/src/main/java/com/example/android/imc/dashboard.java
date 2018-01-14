@@ -17,36 +17,44 @@ import static com.example.android.imc.R.drawable.coracao;
 
 public class dashboard extends AppCompatActivity {
 
+    private Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
     }
-
 
     public void selecionarOpcao(View view) {
-
         switch (view.getId()) {
             case R.id.saude:
-                mensagem(view);
-                Intent i = getIntent();
-                Bundle bundle = i.getExtras();
-                Intent intent = new Intent(this, relatorio.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                montaViewRelatorio(view);
+                Intent intent;
                 break;
             case R.id.dieta:
-                mensagem(view);
-                intent = new Intent(this, dieta.class);
-                startActivity(intent);
+                montaViewDieta(view);
+                break;
         }
-
     }
 
-    public void mensagem(View view) {
+    private void montaViewRelatorio(View view) {
+        mensagem(view);
+        Intent intent = new Intent(this, relatorio.class);
+        intent.putExtras(getIntent());
+        startActivity(intent);
+        finish();
+    }
 
+    private void montaViewDieta(View view) {
+        Intent intent;
+        mensagem(view);
+        intent = new Intent(this, dieta.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void mensagem(View view) {
         TextView textView = (TextView) view;
         String opcao = "Opção: " + textView.getText().toString();
         Toast.makeText(this, opcao, Toast.LENGTH_LONG).show();

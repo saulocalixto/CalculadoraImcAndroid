@@ -15,7 +15,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".dashboard">
+        <activity android:name=".dashboard" android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.dashboard" />
 
@@ -23,7 +26,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".relatorio"
+            android:parentActivityName=".dashboard"
             android:label="Relatório" android:theme="@style/relatorio">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".dashboard" />
             <intent-filter>
                 <action android:name="android.intent.action.relatorio"></action>
                 <category android:name="android.intent.category.LAUNCHER" />

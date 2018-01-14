@@ -15,12 +15,12 @@
     android:layout_margin="16dp" >
 
     <TextView
-        android:text="Cadastro de Perfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="16dp"
-        android:layout_gravity="center"
+        android:text="Inserir dados"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <EditText
