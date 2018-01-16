@@ -1,6 +1,6 @@
 # Health-me
 
-![Screenshot](https://raw.githubusercontent.com/saulocalixto/HealthMe/master/imagens/healthme.png)
+[Screenshot](https://raw.githubusercontent.com/saulocalixto/HealthMe/master/imagens/healthme.png)
 
 Com o intuito de aprender um pouco de Android Nativo desenvolvi esse projeto. Começou com o fim de ser apenas uma calculadora de IMC. Queria treinar a construção de layout além de navegação entre views e formulários. Com o tempo vi que poderia acrescentar mais algumas funções, como dicas de dietas, controle de ingestão de água baseado em seu peso e altura, além de algumas dicas de saúde. Muitas dessas features ainda não foram adicionadas, contudo ele já pode calcular o IMC, diz o seu peso ideal, a quantidade de ingestão de água ideal para o perfil do usuário. Em nível técnico pude treinar a construção do layout utilizando XML e navegação entre views.
 
