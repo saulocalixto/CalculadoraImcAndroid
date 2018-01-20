@@ -1,9 +1,7 @@
 package com.example.android.imc;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.view.MenuItem;
@@ -11,9 +9,12 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import static com.example.android.imc.R.id.agua;
+import static com.example.android.imc.R.id.idade;
 import static com.example.android.imc.R.id.imc;
-import static com.example.android.imc.R.id.perfil;
-import static com.example.android.imc.R.id.pesoIdeal;
+import static com.example.android.imc.R.id.nome;
+import static com.example.android.imc.R.id.sexo;
+import static com.example.android.imc.R.id.peso;
+import static com.example.android.imc.R.id.altura;
 
 /**
  * Created by saulocalixto on 27/12/16.
@@ -25,8 +26,11 @@ public class relatorio extends AppCompatActivity {
     final double LITRO = 1000;
 
     private TextView imcText;
-    private TextView pesoIdealUsuario;
-    private TextView perfilUsuario;
+    private TextView perfilPesoUsuario;
+    private TextView perfilNome;
+    private TextView perfilIdade;
+    private TextView perfilSexo;
+    private TextView perfilAltura;
     private TextView qtdDiariaDeAgua;
     private String pesoDoUsuario;
     private String alturaDoUsuario;
@@ -71,8 +75,11 @@ public class relatorio extends AppCompatActivity {
 
     private void mapeiaCamposDaView() {
         imcText = (TextView) findViewById(imc);
-        pesoIdealUsuario = (TextView) findViewById(pesoIdeal);
-        perfilUsuario = (TextView) findViewById(perfil);
+        perfilPesoUsuario = (TextView) findViewById(peso);
+        perfilNome = (TextView) findViewById(nome);
+        perfilAltura = (TextView) findViewById(altura);
+        perfilIdade = (TextView) findViewById(idade);
+        perfilSexo = (TextView) findViewById(sexo);
         qtdDiariaDeAgua = (TextView) findViewById(agua);
     }
 
@@ -92,9 +99,12 @@ public class relatorio extends AppCompatActivity {
     }
 
     private void PreecherRelatorio() {
-        perfilUsuario.setText(definirPerfil());
+        perfilNome.setText(nomeDoUsuario);
+        perfilIdade.setText(idadeDoUsuario + " anos");
+        perfilSexo.setText(sexoDoUsuario);
+        perfilAltura.setText(getAlturaDouble() + " m");
         imcText.setText(definirIMC());
-        pesoIdealUsuario.setText(definirPesoIdeal());
+        perfilPesoUsuario.setText(pesoDoUsuario + " KG - " + definirPesoIdeal());
         qtdDiariaDeAgua.setText(definirAgua());
     }
 
@@ -104,7 +114,7 @@ public class relatorio extends AppCompatActivity {
         NumberFormat formatter = new DecimalFormat("#0.00");
 
         IMC = "IMC: " + formatter.format(calcularImc());
-        IMC += "\n" + defineMensagemDeResultadoDoImc(calcularImc());
+        IMC += " - " + defineMensagemDeResultadoDoImc(calcularImc());
 
         return IMC;
     }
@@ -179,50 +189,29 @@ public class relatorio extends AppCompatActivity {
         return pesoIdeal;
     }
 
-    public String definirPerfil() {
-        String perfil;
-
-        perfil = "Nome: " + nomeDoUsuario.toString();
-        perfil += "\nIdade: " + idadeDoUsuario.toString();
-        perfil += "\nSexo: " + sexoDoUsuario;
-        perfil += "\nAltura: " + alturaDoUsuario.toString();
-        perfil += "\nPeso: " + pesoDoUsuario.toString();
-
-        return perfil;
-    }
-
     public String definirPesoIdeal() {
 
         NumberFormat formatter = new DecimalFormat("#0.00");
 
-        String peso;
-
-        peso = "Peso ideal: " + formatter.format(calcularPesoIdeal()) + " KG";
+        String peso = "";
 
         boolean pesoDoUsuarioEhMaiorQuePesoIdeal = Double.parseDouble(pesoDoUsuario) - calcularPesoIdeal() > 0;
 
         if(pesoDoUsuarioEhMaiorQuePesoIdeal) {
-            peso += "\nVocê deve perder " + formatter.format(Double.parseDouble(pesoDoUsuario) -
-                    calcularPesoIdeal()) + " KG";
+            peso += formatter.format(Double.parseDouble(pesoDoUsuario) -
+                    calcularPesoIdeal()) + " KG acima do peso.";
         } else {
-            peso += "\nVocê deve ganhar " + formatter.format(calcularPesoIdeal() -
-                    Double.parseDouble(pesoDoUsuario)) + " KG";
+            peso += formatter.format(calcularPesoIdeal() -
+                    Double.parseDouble(pesoDoUsuario)) + " KG abaixo do peso.";
         }
 
         return peso;
-
     }
 
     public String definirAgua() {
 
         NumberFormat formatter = new DecimalFormat("#0.00");
 
-        String agua;
-
-        agua = "Levando em conta seu peso e sua altura, você deve ingerir:";
-        agua += "\n" + formatter.format(calcularQuantidadedeAgua() / LITRO).toString()
-                + " Litros de Água diária.";
-
-        return agua;
+        return formatter.format(calcularQuantidadedeAgua() / LITRO).toString() + " LT";
     }
 }
