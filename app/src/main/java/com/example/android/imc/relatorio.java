@@ -16,15 +16,11 @@ import static com.example.android.imc.R.id.sexo;
 import static com.example.android.imc.R.id.peso;
 import static com.example.android.imc.R.id.altura;
 
-/**
- * Created by saulocalixto on 27/12/16.
- */
-
 public class relatorio extends AppCompatActivity {
 
-    final double QUANTIDADE_DE_AGUA_POR_KG = 35;
-    final double LITRO = 1000;
-
+    private imc imcObj;
+    private pesoIdeal pesoIdeal;
+    private quantidadeIdealDeAgua qtdIdealAgua;
     private TextView imcText;
     private TextView perfilPesoUsuario;
     private TextView perfilNome;
@@ -103,52 +99,29 @@ public class relatorio extends AppCompatActivity {
         perfilIdade.setText(idadeDoUsuario + " anos");
         perfilSexo.setText(sexoDoUsuario);
         perfilAltura.setText(getAlturaDouble() + " m");
-        imcText.setText(definirIMC());
-        perfilPesoUsuario.setText(pesoDoUsuario + " KG - " + definirPesoIdeal());
-        qtdDiariaDeAgua.setText(definirAgua());
+        imcText.setText(getImcObj().getValorImc());
+        perfilPesoUsuario.setText(pesoDoUsuario + " KG - " + getPesoIdeal().definirPesoIdeal());
+        qtdDiariaDeAgua.setText(getqtdIdealAgua().getQuantidadeIdealDeAgua());
     }
 
-    private String definirIMC() {
-        String IMC;
-
-        NumberFormat formatter = new DecimalFormat("#0.00");
-
-        IMC = "IMC: " + formatter.format(calcularImc());
-        IMC += " - " + defineMensagemDeResultadoDoImc(calcularImc());
-
-        return IMC;
+    private imc getImcObj() {
+        return imcObj == null ?
+                new imc(transformeStringEmDouble(pesoDoUsuario), getAlturaDouble()) :
+                imcObj;
     }
 
-    private double calcularImc() {
-
-        double imc;
-
-        double peso = transformeStringEmDouble(pesoDoUsuario);
-        double altura = getAlturaDouble();
-        imc = peso / (altura * altura);
-
-        return imc;
+    private pesoIdeal getPesoIdeal() {
+        return pesoIdeal == null ?
+                new pesoIdeal(getAlturaDouble(),
+                        transformeStringEmDouble(pesoDoUsuario),
+                        sexoDoUsuario) :
+                pesoIdeal;
     }
 
-    private String defineMensagemDeResultadoDoImc(double resultado) {
-
-        String mensagem = "\nInsira os dados corretamente.";
-
-        if(resultado < 18.5) {
-            mensagem = "Abaixo do peso ideal.";
-        } else if(resultado < 24.9) {
-            mensagem = "Seu IMC está na média ideal, parabéns!";
-        } else if (resultado < 29.9) {
-            mensagem = "Levemente acima do peso";
-        } else if(resultado < 34.9) {
-            mensagem = "Obesidade grau 1";
-        } else if(resultado < 39.9) {
-            mensagem = "Obesidade grau 2, severa!";
-        } else if(resultado > 40) {
-            mensagem = "Obesidade grau 3, mórbida!";
-        }
-
-        return mensagem;
+    private quantidadeIdealDeAgua getqtdIdealAgua() {
+        return qtdIdealAgua == null ?
+                new quantidadeIdealDeAgua(transformeStringEmDouble(pesoDoUsuario)) :
+                qtdIdealAgua;
     }
 
     private double transformeStringEmDouble(String valor) {
@@ -157,7 +130,7 @@ public class relatorio extends AppCompatActivity {
 
     /**
      * Transforma a altura passada pelo usuário em double.
-     * Caso o usuário tenha digitado a altura em centímeros, não em metros é feita a conversão
+     * Caso o usuário tenha digitado a altura em centímeros é feita a conversão
      * de centímeros para metros.
      * @return A altura do usuário convertida para metros e double.
      */
@@ -165,53 +138,5 @@ public class relatorio extends AppCompatActivity {
         double altura = transformeStringEmDouble(alturaDoUsuario);
         altura = altura > 100 ? altura / 100 : altura;
         return altura;
-    }
-
-    public double calcularQuantidadedeAgua() {
-
-        double quantidadeIdealDeAgua;
-
-        double peso = transformeStringEmDouble(pesoDoUsuario);
-
-        quantidadeIdealDeAgua = peso * QUANTIDADE_DE_AGUA_POR_KG;
-
-        return quantidadeIdealDeAgua;
-    }
-
-    public double calcularPesoIdeal() {
-        double pesoIdeal = 0.0;
-        if(sexoDoUsuario.equals("Homem")) {
-            pesoIdeal = (72.7 * getAlturaDouble()) - 58;
-        } else if(sexoDoUsuario.equals("Mulher")) {
-            pesoIdeal = (62.1 * getAlturaDouble()) - 44.7;
-        }
-
-        return pesoIdeal;
-    }
-
-    public String definirPesoIdeal() {
-
-        NumberFormat formatter = new DecimalFormat("#0.00");
-
-        String peso = "";
-
-        boolean pesoDoUsuarioEhMaiorQuePesoIdeal = Double.parseDouble(pesoDoUsuario) - calcularPesoIdeal() > 0;
-
-        if(pesoDoUsuarioEhMaiorQuePesoIdeal) {
-            peso += formatter.format(Double.parseDouble(pesoDoUsuario) -
-                    calcularPesoIdeal()) + " KG acima do peso.";
-        } else {
-            peso += formatter.format(calcularPesoIdeal() -
-                    Double.parseDouble(pesoDoUsuario)) + " KG abaixo do peso.";
-        }
-
-        return peso;
-    }
-
-    public String definirAgua() {
-
-        NumberFormat formatter = new DecimalFormat("#0.00");
-
-        return formatter.format(calcularQuantidadedeAgua() / LITRO).toString() + " LT";
     }
 }
