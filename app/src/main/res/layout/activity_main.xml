@@ -1,109 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout_editor_absoluteY="0dp"
-    tools:layout_editor_absoluteX="8dp">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.example.android.imc.MainActivity">
 
-<LinearLayout
-    android:id="@+id/activity_main"
+<android.support.design.widget.AppBarLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="16dp" >
+    android:layout_height="wrap_content">
 
-    <TextView
+    <ImageButton
+        android:id="@+id/btnAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Inserir dados"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:id="@+id/nome"
-        android:hint="Nome"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="16dp" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/idadeUsr"
-        android:hint="Idade"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="16dp"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:id="@+id/peso"
-        android:hint="Peso Kg"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="16dp"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:id="@+id/altura"
-        android:hint="Altura m"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="16dp"/>
-
-    <RadioGroup
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:checkedButton="@+id/homemRadio"
-        android:orientation="horizontal"
-        android:id="@+id/radioGroup"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
-
-        <RadioButton
-            android:text="Homem"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:id="@+id/homemRadio"
-            android:checked="true" />
-
-        <RadioButton
-            android:text="Mulher"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:id="@+id/mulherRadio" />
-
-    </RadioGroup>
-
-    <Button
-        android:text="Entrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/calcular"
-        android:onClick="calcularImc"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"/>
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="3dp"
+        android:onClick="novoUsuario"
+        android:src="@android:drawable/ic_menu_add"
+        android:visibility="visible"
+        app:layout_constraintRight_toLeftOf="@+id/btnAdd"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-</LinearLayout>
-    </ScrollView>
+</android.support.design.widget.AppBarLayout>
+
+    <include
+        layout="@layout/activity_recycler_view"
+        android:id="@+id/includemain"
+        android:visibility="visible"/>
+
+    <include
+        layout="@layout/activity_add_usuario"
+        android:id="@+id/includecadastro"
+        android:visibility="invisible"/>
+
+</android.support.design.widget.CoordinatorLayout>

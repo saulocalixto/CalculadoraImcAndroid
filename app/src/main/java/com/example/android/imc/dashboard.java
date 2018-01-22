@@ -30,7 +30,6 @@ public class dashboard extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.saude:
                 montaViewRelatorio(view);
-                Intent intent;
                 break;
             case R.id.dieta:
                 montaViewDieta(view);
